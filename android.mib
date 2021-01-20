@@ -1,0 +1,189 @@
+
+ANDROID-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+	enterprises, TimeTicks
+		FROM RFC1155-SMI
+	OBJECT-TYPE
+		FROM RFC-1212;
+
+ufrgs                OBJECT IDENTIFIER ::= { enterprises 12619 }
+android              OBJECT IDENTIFIER ::= { ufrgs 1 }
+system               OBJECT IDENTIFIER ::= { android 1 }
+services             OBJECT IDENTIFIER ::= { android 2 }
+
+-- The hardware status.
+
+hardware             OBJECT IDENTIFIER ::= { android 3 }
+manager             OBJECT IDENTIFIER ::= { android 4 }
+
+srvcNumber  OBJECT-TYPE
+	SYNTAX     INTEGER
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		"The number of services currently running on device."
+	::= { services 1 }
+
+srvcTable  OBJECT-TYPE
+	SYNTAX SEQUENCE OF SrvcEntry
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		"A list of the services currently running on device. The number of entries is given by the value of srvcNumber."
+	::= { services 2 }
+
+srvcEntry  OBJECT-TYPE
+	SYNTAX 	SrvcEntry
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		""
+	INDEX { srvcIndex }
+	::= { srvcTable 1 }
+
+SrvcEntry ::= SEQUENCE {
+	srvcIndex
+		INTEGER,
+	srvcDescr
+		OCTET STRING,
+	srvcRunningTime
+		TimeTicks,
+	srvcMemoryUsed
+		INTEGER
+}
+
+srvcIndex  OBJECT-TYPE
+	SYNTAX     INTEGER
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION
+		""
+	::= { srvcEntry 1 }
+
+srvcDescr  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		""
+	::= { srvcEntry 2 }
+
+srvcRunningTime  OBJECT-TYPE
+	SYNTAX     TimeTicks
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		""
+	::= { srvcEntry 3 }
+
+srvcMemoryUsed  OBJECT-TYPE
+	SYNTAX     INTEGER
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		""
+	::= { srvcEntry 4 }
+
+hwBatteryStatus  OBJECT-TYPE
+	SYNTAX     INTEGER (0|1)
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		"Battery charge level of the device:
+		
+		0 - OFF
+		1 - ON"
+	DEFVAL  { 0 }
+	::= { hardware 1 }
+
+hwBatteryLevel  OBJECT-TYPE
+	SYNTAX     INTEGER (0|1)
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		"Battery level of the device:
+		
+		0 - 100 %"
+	::= { hardware 2 }
+
+hwGPSStatus  OBJECT-TYPE
+	SYNTAX     INTEGER (0|1)
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		"The GPS Status:
+		
+		0 - OFF
+		1 - ON"
+	::= { hardware 3 }
+
+hwBluetoothStatus  OBJECT-TYPE
+	SYNTAX     INTEGER (0|1)
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		"The Bluetooth Status:
+		
+		0 - OFF
+		1 - ON"
+	::= { hardware 4 }
+
+hwNetworkStatus  OBJECT-TYPE
+	SYNTAX     INTEGER (0|1)
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		"The Network Status:
+		
+		0 - OFF
+		1 - ON"
+	::= { hardware 5 }
+
+hwCameraStatus  OBJECT-TYPE
+	SYNTAX     INTEGER (0|1)
+	ACCESS     read-write
+	STATUS     mandatory
+	DESCRIPTION 
+		"The Network Status:
+		
+		0 - OFF
+		1 - ON"
+	::= { hardware 6 }
+
+sysModelNumber  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		"Device Model Number"
+	::= { system 1 }
+
+sysAndroidVersion  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		"Device Android Version"
+	::= { system 2 }
+
+sysUpTime  OBJECT-TYPE
+	SYNTAX     TimeTicks
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		"Device Up time since last charge"
+	::= { system 3 }
+
+mngMessage  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	ACCESS     read-write
+	STATUS     mandatory
+	DESCRIPTION 
+		"Some message from manager"
+	::= { manager 1 }
+
+
+END
+
+-- This MIB was created using NuDesign Team's Visual MIBuilder (Ver 4.9).
